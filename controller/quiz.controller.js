@@ -7,8 +7,14 @@ export const getQuizByMaterial = async (req, res) => {
     const {materialId} = req.params;
     console.log(">>> Fetching quiz for materialId:", materialId);
 
-    const quiz = await Quiz.findOne({materialId}).lean();
-    console.log("DEBUG quiz:", quiz);
+    // const quiz = await Quiz.findOne({materialId}).lean();
+    // console.log("DEBUG quiz:", quiz);
+    
+    let quiz = await Quiz.findOne({ materialId }).lean();
+        if (!quiz && mongoose.Types.ObjectId.isValid(materialId)) {
+            quiz = await Quiz.findOne({ materialId: new mongoose.Types.ObjectId(materialId) }).lean();
+        }
+        console.log("DEBUG quiz:", quiz);
 
 
     if(!quiz){
@@ -36,7 +42,8 @@ export const submitQuiz = async(req, res) => {
     const userId = req.user.id;
 
      // cari quiz
-    const quiz = await Quiz.findOne({ materialId });
+    // const quiz = await Quiz.findOne({ materialId });
+    const quiz = await Quiz.findOne({ materialId: new mongoose.Types.ObjectId(materialId) }).lean();
     if (!quiz) {
       return res.status(404).json({ message: "Quiz not found" });
     }

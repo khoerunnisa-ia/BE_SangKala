@@ -6,7 +6,7 @@ import userRoutes from "./routes/user_route.js";
 import progressRoutes from "./routes/progress_route.js";
 import materialRoutes from "./routes/material_route.js";
 import quizRoutes from "./routes/quiz_route.js";
-import { PORT } from "./config/config.js";
+// import { PORT } from "./config/config.js";
 import { connectDB } from "./models/db.js";
 
 connectDB();
@@ -38,7 +38,7 @@ app.use("/api", chatRoutes);
 
 // Run server
 
-// const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

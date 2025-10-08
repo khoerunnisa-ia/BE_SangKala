@@ -32,15 +32,38 @@ export async function getAIResponse (message) {
 
     const retrieverOutput = await retriever.getRelevantDocuments(message);
 
-    //TODO: ganti promopt
-    const TEMPLATE = `Anda adalah asisten yang menjawab pertanyaan berdasarkan dokumen sejarah masa pergerakan nasional Indonesia berikut. 
-    Jika pertanyaan tidak berhubungan dengan sejarah masa pergerakan nasional Indonesia, jawab: "Pertanyaan tidak terkait dengan sejarah pergerakan nasional."
+    // //TODO: ganti promopt
+    // const TEMPLATE = `Anda adalah asisten yang menjawab pertanyaan berdasarkan dokumen sejarah masa pergerakan nasional Indonesia berikut. 
+    // Jika pertanyaan tidak berhubungan dengan sejarah masa pergerakan nasional Indonesia, jawab: "Pertanyaan tidak terkait dengan sejarah pergerakan nasional."
 
-    Context:
+    // Context:
+    // ${retrieverOutput.map(r => r.pageContent).join("\n\n")}
+
+    // Pertanyaan: 
+    // ${message}
+    // `;
+
+    const TEMPLATE = `
+    Anda adalah asisten sejarah yang cerdas dan komunikatif. Jawablah pertanyaan berikut secara langsung, jelas, dan alami, hanya jika jawabannya dapat ditemukan dari dokumen sejarah pergerakan nasional Indonesia yang diberikan di bawah ini.
+
+    Jika perlu, lakukan penalaran bertahap (step-by-step reasoning) dengan mengutip atau menggabungkan beberapa bagian context. Jika membutuhkan data, gunakan context sebagai sumber utama (anggap context sebagai "alat bantu" Anda). Jangan pernah menjawab di luar topik sejarah pergerakan nasional Indonesia.
+
+    Jika pertanyaan tidak relevan dengan sejarah pergerakan nasional Indonesia, jawab dengan singkat: "Pertanyaan tidak terkait dengan sejarah pergerakan nasional."
+
+    **Petunjuk format:**
+    - Gunakan format markdown standar.
+    - Jika ingin menebalkan teks, gunakan dua bintang: **teks** (bukan tiga).
+    - Jangan tampilkan tanda *** secara literal di jawaban.
+
+    ---
+    ### Context:
     ${retrieverOutput.map(r => r.pageContent).join("\n\n")}
 
-    Pertanyaan: 
+    ---
+    ### Pertanyaan:
     ${message}
+
+    ### Jawaban:
     `;
 
     // Panggil OpenRouter API dengan model deepseek
